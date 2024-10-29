@@ -1,14 +1,25 @@
 // componentes/NavigationBar.js
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const NavigationBar = () => (
-  <View style={styles.navigation}>
-    <Image source={require('../images/casa.png')} style={styles.iconNav} />
-    <Image source={require('../images/lista.png')} style={styles.iconNav} />
-    <Image source={require('../images/usuario.png')} style={styles.iconNav} />
-  </View>
-);
+const NavigationBar = () => {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.navigation}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Image source={require('../images/casa.png')} style={styles.iconNav} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('BuildPage')}>
+        <Image source={require('../images/lista.png')} style={styles.iconNav} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('UserPage')}>
+        <Image source={require('../images/usuario.png')} style={styles.iconNav} />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   navigation: {
