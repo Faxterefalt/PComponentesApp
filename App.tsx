@@ -10,7 +10,7 @@ import NavigationBar from './componentes/NavigationBar';
 import BuildPage from './componentes/pages/BuildPage';
 //import UserPage from './componentes/pages/UserPage';
 
-// Habilitar las pantallas nativas para mejorar el rendimiento
+// pantallas nativas
 enableScreens();
 
 const Stack = createStackNavigator();

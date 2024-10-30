@@ -1,10 +1,34 @@
-// componentes/pages/BuildPage.js
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import NavigationBar from '../NavigationBar';
 
 const BuildPage = () => {
+  const categories = ["Procesador", "Placa Madre", "RAM", "Tarjeta de Video"];
+  
+  const [listOptions, setListOptions] = useState(["lista456", "lista7"]);
+  const [selectedList, setSelectedList] = useState("");
+  const [isAddingNewList, setIsAddingNewList] = useState(false);
+  const [newListName, setNewListName] = useState("");
+
+  const handleListSelect = (value) => {
+    if (value === "nueva") {
+      setIsAddingNewList(true);
+    } else {
+      setSelectedList(value);
+    }
+  };
+
+  const handleAddNewList = () => {
+    if (newListName.trim()) {
+      setListOptions([...listOptions, newListName.trim()]);
+      setSelectedList(newListName.trim());
+      setNewListName("");
+      setIsAddingNewList(false);
+      Keyboard.dismiss();  // cierra el teclado después de agregar la lista
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Logo y barra de búsqueda */}
@@ -22,23 +46,38 @@ const BuildPage = () => {
 
       {/* Combo box para seleccionar lista */}
       <View style={styles.comboBoxContainer}>
-        <Picker>
-          <Picker.Item label="Nombre de nueva lista..." value="nueva" />
-          <Picker.Item label="lista456" value="lista456" />
-          <Picker.Item label="lista7" value="lista7" />
-        </Picker>
+        {isAddingNewList ? (
+          <TextInput
+            style={styles.newListInput}
+            placeholder="Escribe el nombre de la nueva lista..."
+            value={newListName}
+            onChangeText={setNewListName}
+            onSubmitEditing={handleAddNewList}
+            autoFocus
+          />
+        ) : (
+          <Picker selectedValue={selectedList} onValueChange={handleListSelect}>
+            <Picker.Item label="Nombre de nueva lista..." value="nueva" />
+            {listOptions.map((option, index) => (
+              <Picker.Item key={index} label={option} value={option} />
+            ))}
+          </Picker>
+        )}
       </View>
 
-      {/* Botones de categorías de componentes */}
+      {/* categorías con botones de "Añadir", toca añadir todas */}
       <ScrollView style={styles.componentList}>
-        {["Procesador", "Placa Madre", "RAM", "Tarjeta de Video"].map((category, index) => (
-          <TouchableOpacity key={index} style={styles.addButton}>
-            <Text style={styles.addButtonText}>+ Añadir</Text>
-          </TouchableOpacity>
+        {categories.map((category, index) => (
+          <View key={index} style={styles.categoryBox}>
+            <Text style={styles.categoryTitle}>{category}</Text>
+            <TouchableOpacity style={styles.addButton}>
+              <Text style={styles.addButtonText}>+ Añadir</Text>
+            </TouchableOpacity>
+          </View>
         ))}
       </ScrollView>
 
-      {/* Barra de navegación */}
+
       <NavigationBar />
     </View>
   );
@@ -90,17 +129,38 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#fff',
   },
+  newListInput: {
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    fontSize: 16,
+  },
   componentList: {
     padding: 10,
   },
-  addButton: {
+  categoryBox: {
     backgroundColor: '#fff',
     padding: 15,
     marginVertical: 5,
     borderRadius: 5,
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  addButton: {
+    backgroundColor: '#e0e0e0',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
   },
   addButtonText: {
     fontSize: 16,

@@ -1,4 +1,3 @@
-// componentes/NavigationBar.js
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
