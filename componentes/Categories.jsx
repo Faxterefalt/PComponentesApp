@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, StyleSheet } from 'react-native';
 
-const categories = ['Placa Base', 'Procesador', 'Memoria', 'Carcasa', 'Almacenamiento', 'Ventiladores', 'Tarjeta de video', 'Fuente de alimentación'];
+const categories = ['Placa Madre', 'Procesador', 'RAM', 'Case', 'Almacenamiento', 'Ventiladores', 'Tarjeta de video', 'Fuente de alimentación'];
 
 const Categories = () => (
   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryContainer}>

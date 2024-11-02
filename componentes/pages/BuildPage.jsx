@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import NavigationBar from '../NavigationBar';
 
 const BuildPage = () => {
-  const categories = ["Procesador", "Placa Madre", "RAM", "Tarjeta de Video"];
+  const categories = ["Procesador", "Placa Madre", "RAM", "Tarjeta de Video","Fuente de alimentación","Almacenamiento","Ventiladores","Case"];
   
   const [listOptions, setListOptions] = useState(["lista456", "lista7"]);
   const [selectedList, setSelectedList] = useState("");
