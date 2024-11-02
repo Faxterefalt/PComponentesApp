@@ -9,4 +9,7 @@ npm install react-native-screens react-native-safe-area-context
 ```bash
 npx react-native doctor
 ```
-
+## Correr la app en frontend
+```bash
+npx react-native run-android
+```
