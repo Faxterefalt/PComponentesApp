@@ -10,6 +10,8 @@ import NavigationBar from './componentes/NavigationBar';
 import BuildPage from './componentes/pages/BuildPage';
 //import UserPage from './componentes/pages/UserPage';
 
+import ComponentsList from './componentes/ComponentsList';
+
 // pantallas nativas
 enableScreens();
 
@@ -22,6 +24,8 @@ const HomeScreen = () => {
       <Categories />
       <ContentSection title="En oferta" products={enOfertaProducts} />
       <ContentSection title="Nuevo" products={nuevoProducts} />
+      {/* Integración del componente ComponentsList */}
+      <ComponentsList />
       <NavigationBar />
     </View>
   );
