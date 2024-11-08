@@ -1,18 +1,41 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import NavigationBar from '../NavigationBar';
+import {componentsData } from '../componentesData/componentsData';
 
 const BuildPageList = ({ route }) => {
-  const { categoryTitle } = route.params;
+  const { categoryTitle } = route?.params || {};
+  const filteredComponents = componentsData.filter(
+    (component) => component.category === categoryTitle
+  );
+  
+
+  const renderComponent = ({ item }) => (
+    <View style={styles.componentContainer}>
+      <Image source={{ uri: item.image }} style={styles.image} />
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.price}>${item.price}</Text>
+        <TouchableOpacity style={styles.addButton}>
+          <Text style={styles.addButtonText}>Añadir</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>{categoryTitle}</Text> {/* Asegúrate de que esté dentro de <Text> */}
-        {/* Aquí puedes agregar la lista de componentes específicos para la categoría */}
+        <Text style={styles.title}>{String(categoryTitle)}</Text>
+        <FlatList
+          data={filteredComponents}
+          renderItem={renderComponent}
+          keyExtractor={(item) => item.id.toString()}
+        />
       </View>
 
-      <NavigationBar /> {/* Coloca la barra de navegación en la parte inferior */}
+      <NavigationBar />
     </View>
   );
 };
@@ -31,6 +54,51 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+  },
+  componentContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 5,
+  },
+  infoContainer: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4a3b8f',
+  },
+  addButton: {
+    marginTop: 5,
+    backgroundColor: '#e0e0e0',
+    padding: 8,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  addButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
   },
 });
 

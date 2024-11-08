@@ -13,6 +13,7 @@ const BuildPage = () => {
   const [selectedList, setSelectedList] = useState("");
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const [newListName, setNewListName] = useState("");
+  
 
   const handleListSelect = (value) => {
     if (value === "nueva") {
@@ -81,6 +82,21 @@ const BuildPage = () => {
           </TouchableOpacity>
         </View>
       ))}
+        {/* Contenedor para el costo total */}
+  <View style={styles.totalCostContainer}>
+    <Text style={styles.totalCostText}>Costo Total</Text>
+    <Text style={styles.totalCostValue}>0 $</Text>
+
+    {/* Botones para guardar o descartar la build */}
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.saveButton}>
+        <Text style={styles.buttonText}>Guardar Build</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.discardButton}>
+        <Text style={styles.buttonText}>Descartar Build</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
     </ScrollView>
 
       {/* Barra de navegación en la parte inferior */}
@@ -173,6 +189,54 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  totalCostContainer: {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignItems: 'center',
+  },
+  totalCostText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  totalCostValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 15,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  saveButton: {
+    flex: 1,
+    backgroundColor: '#4a3b8f',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  discardButton: {
+    flex: 1,
+    backgroundColor: '#c2bae8',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
 });
 
 export default BuildPage;
