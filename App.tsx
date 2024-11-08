@@ -9,6 +9,7 @@ import ContentSection from './componentes/ContentSection';
 import NavigationBar from './componentes/NavigationBar';
 import BuildPage from './componentes/pages/BuildPage';
 //import UserPage from './componentes/pages/UserPage';
+import BuildPageList from './componentes/pages/BuildPageList';
 
 // pantallas nativas
 enableScreens();
@@ -42,6 +43,7 @@ const App = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="BuildPage" component={BuildPage} />
+        <Stack.Screen name="BuildPageList" component={BuildPageList} />
         
       </Stack.Navigator>
     </NavigationContainer>

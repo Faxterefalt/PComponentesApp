@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import NavigationBar from '../NavigationBar';
+import { useNavigation } from '@react-navigation/native';
+
 
 const BuildPage = () => {
-  const categories = ["Procesador", "Placa Madre", "RAM", "Tarjeta de Video","Fuente de alimentación","Almacenamiento","Ventiladores","Case"];
+  const categories = ["Procesador", "Placa Madre", "RAM", "Tarjeta de Video", "Fuente de alimentación", "Almacenamiento", "Ventiladores", "Case"];
   
+  const navigation = useNavigation();
   const [listOptions, setListOptions] = useState(["lista456", "lista7"]);
   const [selectedList, setSelectedList] = useState("");
   const [isAddingNewList, setIsAddingNewList] = useState(false);
@@ -25,7 +28,7 @@ const BuildPage = () => {
       setSelectedList(newListName.trim());
       setNewListName("");
       setIsAddingNewList(false);
-      Keyboard.dismiss();  // cierra el teclado después de agregar la lista
+      Keyboard.dismiss();  // Cierra el teclado después de agregar la lista
     }
   };
 
@@ -65,19 +68,22 @@ const BuildPage = () => {
         )}
       </View>
 
-      {/* categorías con botones de "Añadir", toca añadir todas */}
+      {/* Categorías con botones de "Añadir" */}
       <ScrollView style={styles.componentList}>
-        {categories.map((category, index) => (
-          <View key={index} style={styles.categoryBox}>
-            <Text style={styles.categoryTitle}>{category}</Text>
-            <TouchableOpacity style={styles.addButton}>
-              <Text style={styles.addButtonText}>+ Añadir</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
+      {categories.map((category, index) => (
+        <View key={index} style={styles.categoryBox}>
+          <Text style={styles.categoryTitle}>{category}</Text>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate('BuildPageList', { categoryTitle: category })}
+          >
+            <Text style={styles.addButtonText}>+ Añadir</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </ScrollView>
 
-
+      {/* Barra de navegación en la parte inferior */}
       <NavigationBar />
     </View>
   );
@@ -140,6 +146,7 @@ const styles = StyleSheet.create({
   },
   componentList: {
     padding: 10,
+    flex: 1,  // Hace que el ScrollView use el espacio disponible
   },
   categoryBox: {
     backgroundColor: '#fff',
