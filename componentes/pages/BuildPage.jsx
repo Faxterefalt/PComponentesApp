@@ -1,19 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import NavigationBar from '../NavigationBar';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 const BuildPage = () => {
   const categories = ["Procesador", "Placa Madre", "RAM", "Tarjeta de Video", "Fuente de alimentación", "Almacenamiento", "Ventiladores", "Case"];
-  
+  const route = useRoute();
   const navigation = useNavigation();
   const [listOptions, setListOptions] = useState(["lista456", "lista7"]);
   const [selectedList, setSelectedList] = useState("");
   const [isAddingNewList, setIsAddingNewList] = useState(false);
   const [newListName, setNewListName] = useState("");
+  const [selectedComponents, setSelectedComponents] = useState({});
+  const [totalCost, setTotalCost] = useState(0);
+
+  // Función para calcular el costo total
+  const calculateTotalCost = () => {
+    const total = Object.values(selectedComponents).reduce((sum, component) => {
+      return sum + (component.price || 0);
+    }, 0);
+    setTotalCost(total);
+  };
+
+  useEffect(() => {
+    calculateTotalCost();
+  }, [selectedComponents]);
+
+  //Limpiar todos los componentes
+  const handleDiscardBuild = () => {
+    setSelectedComponents({});
+    setTotalCost(0);
+  };
   
+
+  // Si venimos de BuildPageList con un componente seleccionado
+  const componentFromList = route?.params?.selectedComponent;
+  const categoryTitle = route?.params?.categoryTitle;
+
+  // Guardar el componente seleccionado en el estado
+  if (componentFromList && categoryTitle) {
+    setSelectedComponents((prevState) => {
+      const updatedComponents = {
+        ...prevState,
+        [categoryTitle]: componentFromList,
+      };
+      return updatedComponents;
+    });
+    navigation.setParams({ selectedComponent: null, categoryTitle: null });
+  }
+  
+
+    // Quitar componente seleccionado
+    const handleRemoveComponent = (category) => {
+      setSelectedComponents((prevState) => {
+        const newState = { ...prevState };
+        delete newState[category];
+        return newState;
+      });
+    };
+
 
   const handleListSelect = (value) => {
     if (value === "nueva") {
@@ -72,30 +119,52 @@ const BuildPage = () => {
       {/* Categorías con botones de "Añadir" */}
       <ScrollView style={styles.componentList}>
       {categories.map((category, index) => (
-        <View key={index} style={styles.categoryBox}>
-          <Text style={styles.categoryTitle}>{category}</Text>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => navigation.navigate('BuildPageList', { categoryTitle: category })}
-          >
-            <Text style={styles.addButtonText}>+ Añadir</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-        {/* Contenedor para el costo total */}
-  <View style={styles.totalCostContainer}>
-    <Text style={styles.totalCostText}>Costo Total</Text>
-    <Text style={styles.totalCostValue}>0 $</Text>
+          <View key={index} style={styles.categoryBox}>
+            <Text style={styles.categoryTitle}>{category}</Text>
+            {selectedComponents[category] ? (
+              <View>
+                <View>
+                  <Text>{selectedComponents[category].name}</Text>
+                  <Text style={{ fontWeight: 'bold', marginTop: 4 }}>${selectedComponents[category].price}</Text>
+                </View>
 
-    {/* Botones para guardar o descartar la build */}
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.buttonText}>Guardar Build</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.discardButton}>
-        <Text style={styles.buttonText}>Descartar Build</Text>
-      </TouchableOpacity>
-    </View>
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => handleRemoveComponent(category)}
+                >
+                  <Text style={styles.removeButtonText}>Quitar</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.addButton}
+               // onPress={() => navigation.navigate('BuildPageList', { categoryTitle: category, onSelectComponent:(component)=>{setSelectedComponent(component)} })}
+               onPress={() => navigation.navigate('BuildPageList', { categoryTitle: category, onSelectComponent: (component) => {
+                setSelectedComponents((prevState) => ({
+                  ...prevState,
+                  [category]: component,
+                }));
+              }})}
+              >
+                <Text style={styles.addButtonText}>+ Añadir</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
+        {/* Contenedor para el costo total */}
+        <View style={styles.totalCostContainer}>
+          <Text style={styles.totalCostText}>Costo Total</Text>
+          <Text style={styles.totalCostValue}>${totalCost}</Text>
+
+          {/* Botones para guardar o descartar la build */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.saveButton}>
+              <Text style={styles.buttonText}>Guardar Build</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.discardButton} onPress={handleDiscardBuild}>
+              <Text style={styles.buttonText}>Descartar Build</Text>
+            </TouchableOpacity>
+          </View>
   </View>
     </ScrollView>
 
@@ -110,6 +179,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f0f0f0',
   },
+  categoryBox: { padding: 15, backgroundColor: '#fff', marginVertical: 5 },
+  categoryTitle: { fontSize: 16, fontWeight: 'bold', textAlign: 'center' },
+  addButton: { backgroundColor: '#e0e0e0', padding: 10, borderRadius: 5 },
+  addButtonText: { textAlign: 'center', color: '#333' },
+  removeButton: { backgroundColor: '#f44336', padding: 10, borderRadius: 5, marginTop: 5 },
+  removeButtonText: { textAlign: 'center', color: '#fff' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

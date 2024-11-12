@@ -2,13 +2,20 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import NavigationBar from '../NavigationBar';
 import {componentsData } from '../componentesData/componentsData';
+import { useNavigation } from '@react-navigation/native';
 
 const BuildPageList = ({ route }) => {
   const { categoryTitle } = route?.params || {};
+  const navigation = useNavigation();
+
   const filteredComponents = componentsData.filter(
     (component) => component.category === categoryTitle
   );
-  
+
+  const handleAddComponent = (component) => {
+    navigation.goBack(); // Regresar a BuildPage
+    route.params?.onSelectComponent?.(component);
+  };
 
   const renderComponent = ({ item }) => (
     <View style={styles.componentContainer}>
@@ -17,24 +24,27 @@ const BuildPageList = ({ route }) => {
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.description}>{item.description}</Text>
         <Text style={styles.price}>${item.price}</Text>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => handleAddComponent(item)}
+        >
           <Text style={styles.addButtonText}>Añadir</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{String(categoryTitle)}</Text>
-        <FlatList
-          data={filteredComponents}
-          renderItem={renderComponent}
-          keyExtractor={(item) => item.id.toString()}
-        />
+      <FlatList
+        data={filteredComponents}
+        renderItem={renderComponent}
+        keyExtractor={(item) => item.id.toString()}
+      />
       </View>
-
       <NavigationBar />
     </View>
   );
@@ -45,6 +55,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f0f0f0',
   },
+  componentContainer: { flexDirection: 'row', padding: 10, backgroundColor: '#fff', marginVertical: 5 },
+  image: { width: 60, height: 60 },
+  infoContainer: { flex: 1, marginLeft: 10 },
+  addButton: { backgroundColor: '#4caf50', padding: 10, borderRadius: 5, marginTop: 5 },
+  addButtonText: { color: '#fff', textAlign: 'center' },
   content: {
     flex: 1,
     paddingTop: 20,
